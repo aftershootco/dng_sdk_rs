@@ -1,6 +1,7 @@
 use crate::coord::Coord;
 use crate::matrix::Vector;
 use crate::point::Point;
+use crate::tag::values::LightSource;
 use crate::temparature::Temperature;
 use crate::traits::{LinearFn, Normalize, SmoothStep};
 use crate::types::rational::URational;
@@ -25,6 +26,25 @@ pub struct Illuminant {
 }
 
 impl Illuminant {
+    pub fn set_white_xy(&mut self, white_xy: Coord) {
+        const MIN: f64 = 0.000001;
+        const MAX: f64 = 0.999999;
+        let x = URational::from(white_xy.x);
+        let y = URational::from(white_xy.y);
+
+        // if  < MIN || x > MAX || y < MIN || y > MAX {
+        //     panic!("Invalid white point");
+        // }
+    }
+    pub fn illuminant_data(light: &LightSource, other: Self) -> Self {
+        match light {
+            LightSource::StandardLightA | LightSource::Tungsten => {
+                // Illuminant::illuminant_data_a(other)
+            }
+            _ => todo!(),
+        }
+        todo!()
+    }
     pub fn calculate_triple_illuminant_weights(
         white: &Coord,
         light: &[Self; 3],
@@ -114,11 +134,11 @@ impl LinearFn for MapTemperature {
         false
     }
 
-    fn evaluate(x: f64) -> f64 {
+    fn evaluate(&self, x: f64) -> f64 {
         (1500.0 / x).min(1.0)
     }
 
-    fn reverse_evaluate(_: f64) -> f64 {
+    fn reverse_evaluate(&self, _: f64) -> f64 {
         unimplemented!("Impossible to reverse evaluate MapTemperature")
     }
 }

@@ -52,13 +52,13 @@ pub trait LinearFn {
     /// \param x A value between 0.0 and 1.0 (inclusive).
     /// \retval Mapped value for x
 
-    fn evaluate(x: f64) -> f64;
+    fn evaluate(&self, x: f64) -> f64;
     /// Return the reverse mapped value for y.
     /// This method can be implemented by derived classes. The default implementation
     /// uses Newton's method to solve for x such that Evaluate(x) == y.
     /// \param y A value to reverse map. Should be within the range of the function
 
-    fn reverse_evaluate(y: f64) -> f64;
+    fn reverse_evaluate(&self, y: f64) -> f64;
 }
 
 pub struct Identity;
@@ -68,11 +68,11 @@ impl LinearFn for Identity {
         true
     }
 
-    fn evaluate(x: f64) -> f64 {
+    fn evaluate(&self, x: f64) -> f64 {
         x
     }
 
-    fn reverse_evaluate(y: f64) -> f64 {
+    fn reverse_evaluate(&self, y: f64) -> f64 {
         y
     }
 }
@@ -119,5 +119,20 @@ impl<const LEN: usize> SmoothStep for [f64; LEN] {
         self.iter_mut()
             .take(LEN)
             .for_each(|v| *v = v.powi(2) * (3.0 - 2.0 * *v));
+    }
+}
+
+pub trait Average {
+    type Output;
+    fn average(&self) -> Self::Output;
+}
+
+impl<const LEN: usize> Average for [f64; LEN] {
+    type Output = f64;
+    fn average(&self) -> f64 {
+        if LEN == 0 {
+            return 0.0;
+        }
+        self.iter().take(LEN).sum::<f64>() / LEN as f64
     }
 }

@@ -1,4 +1,5 @@
 pub mod conversions;
+pub mod non_zero_float;
 pub mod rational;
 
 pub const fn dng_char4(input: [u8; 4]) -> u32 {

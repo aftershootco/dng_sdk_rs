@@ -26,4 +26,8 @@ pub enum ErrorKind {
     InvalidColorSpec(usize),
     #[error("Unable to get color temperature")]
     InvalidTemperature,
+    #[error("Forward matrices not present")]
+    MissingForwardMatrices,
+    #[error("Reduction matrices not present")]
+    MissingReductionMatrices,
 }
